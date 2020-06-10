@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import M from "materialize-css/dist/js/materialize.min.js";
+import { connect } from "react-redux";
+import { addTechs } from "../../actions/techAction";
+import PropTypes from "prop-types";
 
-const AddTechModal = () => {
+const AddTechModal = ({ addTechs }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
 
@@ -10,7 +13,15 @@ const AddTechModal = () => {
       //toast i sue to show messages when there is incomplete form on check  its materialize inbuilt property
       M.toast({ html: "Please enter the first and last name" });
     } else {
-      console.log(firstName, lastName);
+      const newTechs = {
+        firstName,
+        lastName,
+      };
+
+      addTechs(newTechs);
+      M.toast({
+        html: `Technician Added Names ${firstName} ${lastName}`,
+      });
 
       //   Clear Fields
       setFirstName("");
@@ -62,4 +73,12 @@ const AddTechModal = () => {
   );
 };
 
-export default AddTechModal;
+AddTechModal.propTypes = {
+  addTechs: PropTypes.object.isRequired,
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  addTechs: (tech) => dispatch(addTechs(tech)),
+});
+
+export default connect(null, mapDispatchToProps)(AddTechModal);
