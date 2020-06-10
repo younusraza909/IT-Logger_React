@@ -2,8 +2,15 @@ import React from "react";
 import Moment from "react-moment";
 //Moment pkg is used for displaying time in format
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { deleteLogs } from "../../actions/logAction";
+import M from "materialize-css/dist/js/materialize.min.js";
 
-const LogItem = ({ log }) => {
+const LogItem = ({ log, deleteLogs }) => {
+  const onDelete = () => {
+    deleteLogs(log.id);
+    M.toast({ html: `Log with Id ${log.id} Has Been removed Successfully` });
+  };
   return (
     <li className="collection-item">
       <div>
@@ -21,7 +28,7 @@ const LogItem = ({ log }) => {
           <span className="black-text">{log.tech}</span> on
           <Moment format="MMMM Do YYYY,h:mm:ss a">{log.date}</Moment>
         </span>
-        <a href="#!" className="secondary-content">
+        <a href="#!" className="secondary-content" onClick={onDelete}>
           <i className="material-icons grey-text">delete</i>
         </a>
       </div>
@@ -31,6 +38,11 @@ const LogItem = ({ log }) => {
 
 LogItem.prototype = {
   log: PropTypes.object.isRequired,
+  deleteLogs: PropTypes.func.isRequired,
 };
 
-export default LogItem;
+const mapDispatchToProps = (dispatch) => ({
+  deleteLogs: (id) => dispatch(deleteLogs(id)),
+});
+
+export default connect(null, mapDispatchToProps)(LogItem);
