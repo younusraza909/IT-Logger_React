@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { searchLogs } from "../../actions/logAction";
 
+//if we aue using class base component we use createRef  otherwise Useref
+
 const SearchBar = ({ searchLogs }) => {
   const text = useRef("");
   const onChange = (e) => {
