@@ -7,6 +7,7 @@ import {
   SET_CURRENT,
   CLEAR_CURRENT,
   UPDATE_LOGS,
+  SEARCH_LOGS,
 } from "../actions/types";
 
 const initialState = {
@@ -52,10 +53,17 @@ export default (state = initialState, action) => {
           log.id === action.payload.id ? action.payload : log
         ),
       };
+
     case LOGS_ERROR:
       return {
         ...state,
         error: action.payload,
+      };
+
+    case SEARCH_LOGS:
+      return {
+        ...state,
+        logs: action.payload,
       };
 
     case DELETE_LOGS:

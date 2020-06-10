@@ -7,6 +7,7 @@ import {
   SET_CURRENT,
   CLEAR_CURRENT,
   UPDATE_LOGS,
+  SEARCH_LOGS,
 } from "./types";
 
 // if we eant to dispatch some thing from action in async manner we can use thunk like in these scenario
@@ -125,6 +126,27 @@ export const updateLogs = (log) => async (dispatch) => {
 
     dispatch({
       type: UPDATE_LOGS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: LOGS_ERROR,
+      payload: error.response.data,
+    });
+  }
+};
+
+//Search Logs
+export const searchLogs = (text) => async (dispatch) => {
+  // Redux thunk allow us to return function directly
+  try {
+    setLoading();
+
+    const res = await fetch(`/logs?q=${text}`);
+    const data = await res.json();
+
+    dispatch({
+      type: SEARCH_LOGS,
       payload: data,
     });
   } catch (error) {
