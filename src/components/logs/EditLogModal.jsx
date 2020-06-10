@@ -1,17 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import M from "materialize-css/dist/js/materialize.min.js";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { updateLogs } from "../../actions/logAction";
 
-const EditLogModal = () => {
+const EditLogModal = ({ updateLogs, current }) => {
   const [message, setMessage] = useState("");
   const [attention, setAttention] = useState(false);
   const [tech, setTech] = useState("");
+
+  useEffect(() => {
+    if (current) {
+      setMessage(current.message);
+      setAttention(current.attention);
+      setTech(current.tech);
+      // eslint-disable-next-line
+    }
+  }, [current]);
 
   const onSubmit = () => {
     if (message === "" || tech === "") {
       //toast i sue to show messages when there is incomplete form on check  its materialize inbuilt property
       M.toast({ html: "Please enter a message and tech" });
     } else {
-      console.log(message, tech, attention);
+      const newUpdateLogs = {
+        id: current.id,
+        message,
+        attention,
+        tech,
+        date: new Date(),
+      };
+      updateLogs(newUpdateLogs);
+      M.toast({ html: `Log Updates By ${tech}` });
       //   Clear Fields
       setMessage("");
       setTech("");
@@ -31,9 +51,6 @@ const EditLogModal = () => {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
             />
-            <label htmlFor="message" className="active">
-              Log Message
-            </label>
           </div>
         </div>
         <div className="row">
@@ -91,4 +108,17 @@ const modalStyle = {
   height: "75%",
 };
 
-export default EditLogModal;
+const mapDispatchToProps = (dispatch) => ({
+  updateLogs: (log) => dispatch(updateLogs(log)),
+});
+
+EditLogModal.protoType = {
+  updateLogs: PropTypes.func.isRequired,
+  current: PropTypes.object,
+};
+
+const mapStateToProps = (state) => ({
+  current: state.log.current,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditLogModal);

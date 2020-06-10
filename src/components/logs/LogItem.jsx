@@ -3,10 +3,10 @@ import Moment from "react-moment";
 //Moment pkg is used for displaying time in format
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { deleteLogs } from "../../actions/logAction";
+import { deleteLogs, setCurrent } from "../../actions/logAction";
 import M from "materialize-css/dist/js/materialize.min.js";
 
-const LogItem = ({ log, deleteLogs }) => {
+const LogItem = ({ log, deleteLogs, setCurrent }) => {
   const onDelete = () => {
     deleteLogs(log.id);
     M.toast({ html: `Log with Id ${log.id} Has Been removed Successfully` });
@@ -19,6 +19,7 @@ const LogItem = ({ log, deleteLogs }) => {
           className={`modal-trigger ${
             log.attention ? "red-text" : "blue-text"
           }`}
+          onClick={() => setCurrent(log)}
         >
           {log.message}
         </a>
@@ -39,10 +40,12 @@ const LogItem = ({ log, deleteLogs }) => {
 LogItem.prototype = {
   log: PropTypes.object.isRequired,
   deleteLogs: PropTypes.func.isRequired,
+  setCurrent: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   deleteLogs: (id) => dispatch(deleteLogs(id)),
+  setCurrent: (currentLog) => dispatch(setCurrent(currentLog)),
 });
 
 export default connect(null, mapDispatchToProps)(LogItem);

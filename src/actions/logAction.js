@@ -4,6 +4,9 @@ import {
   LOGS_ERROR,
   ADD_LOGS,
   DELETE_LOGS,
+  SET_CURRENT,
+  CLEAR_CURRENT,
+  UPDATE_LOGS,
 } from "./types";
 
 // if we eant to dispatch some thing from action in async manner we can use thunk like in these scenario
@@ -82,6 +85,47 @@ export const deleteLogs = (id) => async (dispatch) => {
     dispatch({
       type: DELETE_LOGS,
       payload: id,
+    });
+  } catch (error) {
+    dispatch({
+      type: LOGS_ERROR,
+      payload: error.response.data,
+    });
+  }
+};
+
+//setcurrent Log
+export const setCurrent = (currentLog) => {
+  return {
+    type: SET_CURRENT,
+    payload: currentLog,
+  };
+};
+
+//clear Current Log
+
+export const clearCurrent = () => {
+  return {
+    type: CLEAR_CURRENT,
+  };
+};
+
+//Update Logs
+export const updateLogs = (log) => async (dispatch) => {
+  try {
+    setLoading();
+    const res = await fetch(`/logs/${log.id}`, {
+      method: "PUT",
+      body: JSON.stringify(log),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await res.json();
+
+    dispatch({
+      type: UPDATE_LOGS,
+      payload: data,
     });
   } catch (error) {
     dispatch({
